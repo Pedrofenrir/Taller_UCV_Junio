@@ -1,4 +1,4 @@
-name: Job que imprime en la consola 
+name: Imprimir datos
 
 on:
   schedule:
@@ -19,5 +19,8 @@ jobs:
 
       - name: Run command in the vm
         run: |
-          echo "Imorimir tabla de datos"
+          echo "tabla desde la fuente"
+          cat datas.cvs
+          echo "filtrado datos"
+          grep -v hotmail data.c
           ls -lhrt
