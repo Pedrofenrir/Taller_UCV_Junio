@@ -20,7 +20,7 @@ jobs:
       - name: Run command in the vm
         run: |
           echo "tabla desde la fuente"
-          cat datas.cvs
+          cat datos.cvs
           echo "filtrado datos"
           grep -v hotmail data.c
           ls -lhrt
