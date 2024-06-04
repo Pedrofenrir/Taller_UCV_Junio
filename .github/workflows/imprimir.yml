@@ -1,8 +1,8 @@
-name: ejemplo
+name: Job que imprime en la consola 
 
 on:
   schedule:
-    - cron: '00 0 * * *' # Runs every day at 00:00 UTC
+    - cron: '00 0 * * *' # Runs every day at 00:00 UTC, '00 0 * * FRI' todos los viernes.
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
