@@ -22,5 +22,5 @@ jobs:
           echo "tabla desde la fuente"
           cat datos.cvs
           echo "filtrado datos"
-          grep -v hotmail data.cvs
+          grep -v hotmail datos.cvs
           ls -lhrt
