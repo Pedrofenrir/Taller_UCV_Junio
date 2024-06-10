@@ -1,0 +1,45 @@
+name: Ejemplo_descargar_datos    #Nombre de la run.
+
+on:
+  schedule:
+    - cron: '00 0 * * *'  #Corre todos los dias a las 00:00 UTC
+  workflow_dispatch:      #Allows manual triggering
+#--------------------------------------------------------------------------------
+jobs:
+  analizando_datos:         #Nombre de un "trabajo".
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest  #Corre en el ultimo ubuntu.
+    steps:
+      - name: Checkout code        #Probar cambiar en nombre.
+        uses: actions/checkout@v4
+      #--------------------------------------------------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      #--------------------------------------------------------------------------
+      - name: Descarga data
+        run: | #Descargamos la imformacion de internet y la guardamos en u csv
+          curl -sL "https://companiesmarketcap.com/video-games/largest-video-game-companies-by-market-cap/?download=csv" -o data.csv  
+          if [ ! -s data.csv ]; then
+            echo "Downloaded CSV file is empty"
+            exit 1
+          fi
+      #------------------------------------------------
+      - name: Analizar datos
+        run: |
+          pip install pandas
+          python analisis.py > companies-by-cap.txt
+      #------------------------------------------------
+      - name: commit output
+        if: always()
+        run: |
+          git config --local user.email "action@github.com"    
+          git config --local user.name "GitHub Action"
+          git diff --quiet || git stash
+          git pull --rebase origin main
+          git stash list | grep "stash@{0}" && git stash apply
+          git add .
+          git diff --cached --exit-code || git commit -m "tabla actualizada" --allow-empty
+          git push --force-with-lease origin HEAD:main
